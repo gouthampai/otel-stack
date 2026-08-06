@@ -8,7 +8,7 @@ services:
       - "9090:9090"
     volumes:
       - ./config/prometheus:/etc/prometheus
-      - ./data/prometheus-data:/prometheus
+      - prometheus-data:/prometheus
     command: '--config.file=/etc/prometheus/prometheus.yml'
     mem_limit: 2048M
     cpus: "1.0"
@@ -20,7 +20,7 @@ services:
       - "3100:3100"
     volumes:
       - ./config/loki:/etc/loki
-      - ./data/loki-data:/tmp/loki
+      - loki-data:/tmp/loki
     mem_limit: 1024M
     cpus: "0.5"
 
@@ -32,7 +32,7 @@ services:
       - "4317:4317" # OTLP gRPC
     volumes:
       - ./config/tempo:/etc/tempo
-      - ./data/tempo-data:/tmp/tempo
+      - tempo-data:/tmp/tempo
     mem_limit: 512M
     cpus: "0.5"
 
@@ -45,6 +45,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana
     mem_limit: 512M
     cpus: "0.5"
 
@@ -61,14 +62,10 @@ services:
 
 volumes:
   prometheus-data:
-
-# Resource Limits
-x-defaults: &defaults
-  mem_limit: 512M
-  cpus: "0.5"
-
-services:
-  prometheus:
-    extends:
-      file: ./docker-compose.yml
-      service: base-prometheus
+    driver: local
+  loki-data:
+    driver: local
+  tempo-data:
+    driver: local
+  grafana-data:
+    driver: local
