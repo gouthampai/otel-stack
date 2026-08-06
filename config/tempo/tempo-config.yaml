@@ -12,5 +12,7 @@ distributor:
 storage:
   trace:
     backend: local
+    wal:
+      path: /tmp/tempo/wal # Keep the WAL inside the tempo-data volume
     local:
       path: /tmp/tempo/traces
