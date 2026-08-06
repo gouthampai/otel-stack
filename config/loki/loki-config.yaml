@@ -34,3 +34,4 @@ compactor:
 limits_config:
   allow_structured_metadata: true
   retention_period: 168h # 7 days, matching Prometheus
+  volume_enabled: true # Required by Grafana's Logs Drilldown app

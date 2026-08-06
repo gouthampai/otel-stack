@@ -6,12 +6,34 @@ distributor:
     otlp:
       protocols:
         http:
+          endpoint: "0.0.0.0:4318" # Tempo 2.6+ defaults to localhost; must be explicit for cross-container traffic
         grpc:
           endpoint: "0.0.0.0:4317"
 
 compactor:
   compaction:
     block_retention: 168h # 7 days, matching Prometheus and Loki
+
+# local-blocks powers TraceQL metrics queries (required by Grafana's Traces
+# Drilldown app); span-metrics + service-graphs feed RED metrics and the
+# service graph into Prometheus via remote write.
+metrics_generator:
+  storage:
+    path: /tmp/tempo/generator/wal
+    remote_write:
+      - url: http://prometheus:9090/api/v1/write
+        send_exemplars: true
+  traces_storage:
+    path: /tmp/tempo/generator/traces
+  processor:
+    local_blocks:
+      filter_server_spans: false
+      flush_to_storage: true
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors: [local-blocks, span-metrics, service-graphs]
 
 storage:
   trace:

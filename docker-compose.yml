@@ -30,7 +30,7 @@ services:
     cpus: "0.5"
 
   tempo:
-    image: grafana/tempo:2.3.0
+    image: grafana/tempo:2.8.0
     container_name: tempo
     ports:
       - "3200:3200" # Tempo HTTP (for Grafana)
@@ -39,7 +39,7 @@ services:
       - tempo-data:/tmp/tempo
     command: '-config.file=/etc/tempo/tempo-config.yaml'
     restart: unless-stopped
-    mem_limit: 512M
+    mem_limit: 1024M # Headroom for the metrics-generator
     cpus: "0.5"
 
   grafana:
