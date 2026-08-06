@@ -10,6 +10,8 @@ services:
       - ./config/prometheus:/etc/prometheus
       - ./data/prometheus-data:/prometheus
     command: '--config.file=/etc/prometheus/prometheus.yml'
+    mem_limit: 2048M
+    cpus: "1.0"
 
   loki:
     image: grafana/loki:2.9.0
@@ -19,6 +21,8 @@ services:
     volumes:
       - ./config/loki:/etc/loki
       - ./data/loki-data:/tmp/loki
+    mem_limit: 1024M
+    cpus: "0.5"
 
   tempo:
     image: grafana/tempo:2.3.0
@@ -29,6 +33,8 @@ services:
     volumes:
       - ./config/tempo:/etc/tempo
       - ./data/tempo-data:/tmp/tempo
+    mem_limit: 512M
+    cpus: "0.5"
 
   grafana:
     image: grafana/grafana:latest
@@ -39,6 +45,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
+    mem_limit: 512M
+    cpus: "0.5"
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
@@ -48,6 +56,19 @@ services:
       - "4317:4317" # OTLP gRPC (Receiver)
     volumes:
       - ./config/otel-collector:/etc/otel
+    mem_limit: 512M
+    cpus: "0.5"
 
 volumes:
   prometheus-data:
+
+# Resource Limits
+x-defaults: &defaults
+  mem_limit: 512M
+  cpus: "0.5"
+
+services:
+  prometheus:
+    extends:
+      file: ./docker-compose.yml
+      service: base-prometheus
