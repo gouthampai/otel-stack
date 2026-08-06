@@ -12,6 +12,7 @@ services:
       - '--storage.tsdb.retention.time=7d' # Keep only 7 days of data to save disk space
       - '--storage.tsdb.retention.size=2GB'
       - '--web.enable-remote-write-receiver' # Required for the collector's prometheusremotewrite exporter
+    restart: unless-stopped
     mem_limit: 2048M
     cpus: "1.0"
 
@@ -24,6 +25,7 @@ services:
       - ./config/loki:/etc/loki
       - loki-data:/tmp/loki
     command: '-config.file=/etc/loki/loki-config.yaml'
+    restart: unless-stopped
     mem_limit: 1024M
     cpus: "0.5"
 
@@ -36,6 +38,7 @@ services:
       - ./config/tempo:/etc/tempo
       - tempo-data:/tmp/tempo
     command: '-config.file=/etc/tempo/tempo-config.yaml'
+    restart: unless-stopped
     mem_limit: 512M
     cpus: "0.5"
 
@@ -49,6 +52,7 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - grafana-data:/var/lib/grafana
+    restart: unless-stopped
     mem_limit: 512M
     cpus: "0.5"
 
@@ -61,6 +65,7 @@ services:
     volumes:
       - ./config/otel-collector:/etc/otel
     command: '--config=/etc/otel/otel-collector-config.yaml'
+    restart: unless-stopped
     mem_limit: 512M
     cpus: "0.5"
 

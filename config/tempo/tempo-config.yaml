@@ -9,6 +9,10 @@ distributor:
         grpc:
           endpoint: "0.0.0.0:4317"
 
+compactor:
+  compaction:
+    block_retention: 168h # 7 days, matching Prometheus and Loki
+
 storage:
   trace:
     backend: local
