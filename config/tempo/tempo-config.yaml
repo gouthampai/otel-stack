@@ -19,12 +19,12 @@ compactor:
 # service graph into Prometheus via remote write.
 metrics_generator:
   storage:
-    path: /tmp/tempo/generator/wal
+    path: /var/tempo/generator/wal
     remote_write:
       - url: http://prometheus:9090/api/v1/write
         send_exemplars: true
   traces_storage:
-    path: /tmp/tempo/generator/traces
+    path: /var/tempo/generator/traces
   processor:
     local_blocks:
       filter_server_spans: false
@@ -39,6 +39,6 @@ storage:
   trace:
     backend: local
     wal:
-      path: /tmp/tempo/wal # Keep the WAL inside the tempo-data volume
+      path: /var/tempo/wal # Keep the WAL inside the tempo-data volume
     local:
-      path: /tmp/tempo/traces
+      path: /var/tempo/traces
